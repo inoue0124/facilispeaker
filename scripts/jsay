@@ -1,0 +1,28 @@
+#!/bin/bash
+# 
+# openjtalkで読み上げさせるスクリプト
+# Author:Inoue
+
+
+# コマンドパーサ
+CMDNAME=`basename $0`
+if [ $# -lt 1 ]; then
+  echo "Usage: ${CMDNAME} [text]" 1>&2
+  exit 1
+fi
+
+# wavファイル用のtmpファイル
+tmpwav=$(mktemp)
+
+# openjtalkの各種設定
+voice_model=/usr/share/hts-voice/man.htsvoice
+voice_model=/usr/share/hts-voice/woman.htsvoice
+dic=/var/lib/mecab/dic/open-jtalk/naist-jdic
+
+# wavファイル生成
+echo "$1" | open_jtalk -r 1.1 -m ${voice_model} -x ${dic} -ow ${tmpwav}
+play ${tmpwav}
+
+# 一時ファイル削除
+rm -f ${tmpwav}
+exit 0

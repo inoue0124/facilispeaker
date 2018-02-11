@@ -1,0 +1,39 @@
+#!/bin/bash
+# Sound of Textのapiを使って、google ttsを保存スクリプト
+# Author:Inoue
+
+set -e
+# コマンドパーサ
+CMDNAME=`basename $0`
+if [ $# -lt 1 ]; then
+  echo "Usage: ${CMDNAME} [text]" 1>&2
+  exit 1
+fi
+text=$*
+
+# tmpのjsonファイル
+json_tmp=$(mktemp)
+echo '{"'engine'":"'Google'","'data'":{"'text'":"'$text'","'voice'":"'ja-JP'"}}' > ${json_tmp}
+cat ${json_tmp}
+
+# jsonをPOSTしてTTS音声idを取得
+POST_URL=https://api.soundoftext.com/sounds
+result=`curl ${POST_URL} -H 'Content-Type:application/json' -d @${json_tmp}`
+id=`echo ${result} | jq -r .id`
+
+# POSTで得たidでmp3のURLを生成
+GET_URL=https://api.soundoftext.com/sounds/${id}
+result=`curl ${GET_URL}`
+mp3_URL=`echo ${result} | jq -r .location`
+while [ ${mp3_URL} = "null" ]
+  do
+    result=`curl ${GET_URL}`
+    mp3_URL=`echo ${result} | jq -r .location`
+  done
+
+# mp3をダウンロードして再生
+mp3_tmp=$(mktemp --suffix=.mp3)
+wget ${mp3_URL}
+
+# 一時ファイル削除
+rm ${json_tmp} ${mp3_tmp}
