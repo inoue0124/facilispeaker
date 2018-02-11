@@ -1,0 +1,35 @@
+#!/bin/bash
+# jsonファイルから読み上げテキストを作成するスクリプト
+# usage:./json2list [json file] [save filename]
+
+set -e
+# コマンドパーサ
+CMDNAME=`basename $0`
+if [ $# -lt 2 ]; then
+  echo "Usage: ${CMDNAME} [json file] [save filename]" 1>&2
+  exit 1
+fi
+
+aim=`cat $1|jq -r .aim`
+member=`cat $1|jq -r .member[]|sed 's/$/さん/g'`
+agenda=`cat $1|jq .agenda[].title`
+agenda_items=`cat $1|jq .agenda |jq length`
+prework=`cat $1|jq -r .prework`
+
+echo "start02 この会議の参加者は${member}です。"|tr -d "\n" > $2
+echo "" >> $2
+echo "start05 この会議の目的は${aim}です。" >> $2
+echo "start06 アジェンダは${agenda}です。"|tr -d "\n" >> $2
+echo "" >> $2
+for((i=0;i<${agenda_items};i++)); do
+  speaker=`cat $1|jq -r .agenda[$i].speaker`
+  if [ $speaker == "all" ]; then
+    speaker="皆"
+  fi
+  title=`cat $1|jq -r .agenda[$i].title`
+  class=`cat $1|jq -r .agenda[$i].class`
+  echo "agenda0$i ${speaker}さん。「${title}」の${class}をお願いします。" >> $2
+  echo "summary0$i ${speaker}さん。結論をまとめてください。" >> $2
+  echo "stop0$i ${class}が終わりましたら「OK」と言ってください。" >> $2
+done
+  

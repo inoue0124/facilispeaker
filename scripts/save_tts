@@ -5,10 +5,14 @@
 set -e
 # コマンドパーサ
 CMDNAME=`basename $0`
-if [ $# -lt 1 ]; then
-  echo "Usage: ${CMDNAME} [text]" 1>&2
+if [ $# -lt 3 ] || [ `echo $2 | grep "\."` ]; then
+	echo "Usage: ${CMDNAME} [save dir] [filename (Not required suffix)] [text]" 1>&2
   exit 1
 fi
+save_dir=$1
+filename=$2
+shift
+shift
 text=$*
 
 # tmpのjsonファイル
@@ -31,9 +35,9 @@ while [ ${mp3_URL} = "null" ]
     mp3_URL=`echo ${result} | jq -r .location`
   done
 
-# mp3をダウンロードして再生
+# mp3をダウンロードして保存
 mp3_tmp=$(mktemp --suffix=.mp3)
-wget ${mp3_URL}
+wget -O ${save_dir}/${filename}.mp3 ${mp3_URL}
 
 # 一時ファイル削除
-rm ${json_tmp} ${mp3_tmp}
+rm ${json_tmp}
