@@ -12,15 +12,22 @@ fi
 
 aim=`cat $1|jq -r .aim`
 member=`cat $1|jq -r .member[]|sed 's/$/さん/g'`
-agenda=`cat $1|jq .agenda[].title`
+agenda=`cat $1|jq -r .agenda[].title`
 agenda_items=`cat $1|jq .agenda |jq length`
 prework=`cat $1|jq -r .prework`
 
 echo "start02 この会議の参加者は${member}です。"|tr -d "\n" > $2
 echo "" >> $2
 echo "start05 この会議の目的は${aim}です。" >> $2
-echo "start06 アジェンダは${agenda}です。"|tr -d "\n" >> $2
-echo "" >> $2
+echo "start06 アジェンダは" >> $2
+
+for((i=0;i<${agenda_items};i++)); do
+  echo "start0$((i+7)) `echo $agenda|cut -d " " -f $((i+1))`" >> $2
+  if [ $((i+1)) = ${agenda_items} ]; then
+    echo "start0$((i+7)) `echo $agenda|cut -d " " -f $((i+1))`です。" >> $2
+  fi
+done
+
 for((i=0;i<${agenda_items};i++)); do
   speaker=`cat $1|jq -r .agenda[$i].speaker`
   if [ $speaker == "all" ]; then
