@@ -1,0 +1,14 @@
+#!/bin/bash
+# ファイル名と書き起こしが書かれたファイルから
+# tts音声を作成するスクリプト。
+# list fileの書き方:[filename] [text]
+#                   [filename] [text]
+#                             :
+#                             : 
+# usage:./list2text [list file]
+# Author:Inoue
+
+cat $1|while read line
+do
+  save_tts $2 $line
+done

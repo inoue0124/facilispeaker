@@ -16,16 +16,16 @@
   ],
   "agenda": [
     {
-      "class": "承認",
+      "class": "報告",
       "title": "なぜ会議効率向上が必要なのか",
       "speaker": "井上",
-      "time": "5"
+      "time": "4"
     },
     {
       "class": "討議",
       "title": "会議効率向上のために何ができるか",
       "speaker": "all",
-      "time": "8"
+      "time": "4"
     }
   ],
   "prework": "ドラフト案に目を通す"

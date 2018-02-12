@@ -12,6 +12,7 @@ fi
 
 aim=`cat $1|jq -r .aim`
 member=`cat $1|jq -r .member[]|sed 's/$/さん/g'`
+member_number=`cat $1 |jq -r .member | jq length`
 agenda=`cat $1|jq -r .agenda[].title`
 agenda_items=`cat $1|jq .agenda |jq length`
 prework=`cat $1|jq -r .prework`
@@ -39,4 +40,6 @@ for((i=0;i<${agenda_items};i++)); do
   echo "summary0$i ${speaker}さん。結論をまとめてください。" >> $2
   echo "stop0$i ${class}が終わりましたら「OK」と言ってください。" >> $2
 done
-  
+
+member=`cat $1|jq -r .member[$(($RANDOM % $member_number))]`
+echo "assign01 最後に${member}さん、次回までのトゥードゥーをまとめてください。" >> $2
