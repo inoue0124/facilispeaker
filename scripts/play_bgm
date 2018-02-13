@@ -45,18 +45,18 @@ duration=`soxi -D bgm/${bgm}`
 from=$(($RANDOM % $((${duration%.*}-${time})) ))
 if [ ${part} == "a" ]; then
   if [ ${class} == "承認" ]; then
-    play ./bgm/${bgm} trim 0 $((time-alarm)) gain -n -6
+    play ./bgm/${bgm} trim 0 $((time-alarm)) gain -n -10
   else
     play ./bgm/${bgm} trim $from $((time-alarm)) \
-	    fade 3 $((time-alarm)) 3 gain -n -6
+	    fade 3 $((time-alarm)) 3 gain -n -10
   fi
   play ${tts_dir}/${alarm_tts}
 else
   if [ ${class} == "承認" ]; then
-    play ./bgm/${bgm} trim 0 $((alarm-60)) gain -n -6
+    play ./bgm/${bgm} trim 0 $((alarm-60)) gain -n -10
   else
     play ./bgm/${bgm} trim $from $((alarm-60)) \
-	    fade 3 $((alarm-60)) 3 gain -n -6
+	    fade 3 $((alarm-60)) 3 gain -n -10
   fi
   play ${tts_dir}/time03.mp3
 fi

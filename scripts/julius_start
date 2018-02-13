@@ -1,5 +1,7 @@
 #!/bin/sh
+# juliusをモジュールモードで起動し、pidを表示するスクリプト
 
 julius -C ~/facilispeaker/tools/julius-4.4.2/julius-kit/dictation-kit-v4.3.1-linux/word.jconf -module > /dev/null &
+#julius -C ~/facilispeaker/tools/julius-4.4.2/julius-kit/dictation-kit-v4.3.1-linux/main.jconf -C ~/facilispeaker/tools/julius-4.4.2/julius-kit/dictation-kit-v4.3.1-linux/am-gmm.jconf -module > /dev/null &
 echo $! #プロセスIDを出力
 sleep 3 #2秒間スリープ

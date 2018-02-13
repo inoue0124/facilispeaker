@@ -23,7 +23,7 @@ data_dir=./data/$1
 
 # julius認識サーバ起動
 pid=`./scripts/julius_start`
-trap 'echo "kill $pid"; kill $pid' 2
+#trap 'echo "kill $pid"; kill $pid' 2
 
 
 # 必要なtts音声ファイルを準備
@@ -52,15 +52,16 @@ for((i=0;i<${agenda_items};i++)); do
   ./scripts/play_bgm $1 $i a ${tts_dir}
   ./scripts/play_bgm $1 $i b ${tts_dir}
   play ${tts_dir}/summary0${i}.mp3
-  sleep 60 # 1分間音声認識書き起こし
+  read -p "Hit enter to start recording: "
+  python3 ./scripts/rec.py
   play ${tts_dir}/finish01.mp3
   play ${tts_dir}/stop0${i}.mp3
   python3 ./scripts/voice_command.py # 音声コマンド認識
 done
 
 play ${tts_dir}/assign01.mp3
-sleep 60 # 1分間音声認識書き起こし
-
+read -p "Hit enter to start recording: "
+python3 ./scripts/rec.py
 play ${tts_dir}/finish02.mp3
 
 kill $pid
