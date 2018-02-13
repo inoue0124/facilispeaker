@@ -1,35 +1,34 @@
-# -*- coding: utf-8 -*-
-import subprocess
 import socket
-import string
+import xml.etree.ElementTree as ET
 import os
-import random
-import numpy as np
-from numpy.random import *
+import subprocess
 import time
+import sys
 
-host = "localhost"
-port = 10500
+host = '127.0.0.1' #localhost
+port = 10500   #julisuサーバーモードのポート
 
-p = subprocess.Popen(["./scripts/julius_start"], stdout=subprocess.PIPE, shell=True)
-pid = str(p.stdout.read().decode('utf-8')) # juliusのプロセスIDを取得
-time.sleep(5)
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-sock.connect((host, port))
-
-data =""
-killword =""
-
-while True:
-    while (1):
+def main():
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.connect((host, port)) 
+    data = '' 
+    print('マイクに向かって「OK」と言ってください。')
+    while 1:
         if '</RECOGOUT>\n.' in data: 
-            #data = data + sock.recv(1024)
-            strTemp = ""
-            for line in data.split('\n'):
-                index = line.find('WORD="')
-                if index != -1:
-                    line = line[index+6:line.find('"',index+6)]
-                    strTemp += str(line)
-                if strTemp == 'OK':
-                    exit()
 
+            root = ET.fromstring('<?xml version="1.0"?>\n' \
+                    + data[data.find('<RECOGOUT>'):].replace('\n.', ''))
+            for whypo in root.findall('./SHYPO/WHYPO'):
+
+                word = whypo.get('WORD')
+                if word == 'OK':
+                    sys.exit()
+                    client.close()
+                print (word) 
+                data = '' 
+
+        else:
+            data += str(client.recv(1024).decode('utf-8')) 
+
+if __name__ == "__main__":
+    main()
