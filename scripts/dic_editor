@@ -1,0 +1,10 @@
+#!/bin/sh                                                                                                                                                                                                                         
+echo "What word do you want to register as a dictionary?"
+read word #単語入力
+
+kit_dir=~/facilispeaker/tools/julius-4.4.2/julius-kit
+echo "$word" >>${kit_dir}/word.yomi #word.yomiに書き込み
+cat ${kit_dir}/word.yomi #word.yomiの中身を表示
+
+iconv -f utf8 -t eucjp ${kit_dir}/word.yomi | yomi2voca.pl > ${kit_dir}/dictation-kit-v4.3.1-linux/word.dic #音素データにコンパイル
+echo "Completed!" #完了
