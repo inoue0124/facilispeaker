@@ -1,3 +1,5 @@
 #!/bin/bash
+# デバイスの音量を調整するスクリプト
+# usage:./set_volume [volume(%)]
 
-amixer sset PCM 10%
+amixer sset PCM $1%

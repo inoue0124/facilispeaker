@@ -1,12 +1,12 @@
 #!/bin/bash
 # アジェンダの分類に合わせて音楽再生、残り時間まで読み上げるスクリプト
-# usage:./play_bgm [project name] [agenda number] [part a or b] [tts dir]
+# usage:./play_bgm [project name] [agenda number] [part a or b] [tts dir] [volume]
 # Author:Inoue
 
 
 # コマンドパーサ
 CMDNAME=`basename $0`
-if [ $# -lt 4 ] || \
+if [ $# -lt 5 ] || \
    [ `echo $1 | grep "\."` ] || \
    [ ! -e ./json/$1.json ]; then
   echo "Usage: ${CMDNAME} " [project name] [agenda number] [part a or b] [tts dir] 1>&2
@@ -17,6 +17,7 @@ project=$1
 agenda_num=$2
 part=$3
 tts_dir=$4
+vol=$5
 
 
 # 分類（class）に合わせてBGMを選択
@@ -45,18 +46,18 @@ duration=`soxi -D bgm/${bgm}`
 from=$(($RANDOM % $((${duration%.*}-${time})) ))
 if [ ${part} == "a" ]; then
   if [ ${class} == "承認" ]; then
-    play ./bgm/${bgm} trim 0 $((time-alarm)) gain -n -10
+    play ./bgm/${bgm} trim 0 $((time-alarm)) gain -n ${vol}
   else
     play ./bgm/${bgm} trim $from $((time-alarm)) \
-	    fade 3 $((time-alarm)) 3 gain -n -10
+	    fade 3 $((time-alarm)) 3 gain -n ${vol}
   fi
   play ${tts_dir}/${alarm_tts}
 else
   if [ ${class} == "承認" ]; then
-    play ./bgm/${bgm} trim 0 $((alarm-60)) gain -n -10
+    play ./bgm/${bgm} trim 0 $((alarm-60)) gain -n ${vol}
   else
     play ./bgm/${bgm} trim $from $((alarm-60)) \
-	    fade 3 $((alarm-60)) 3 gain -n -10
+	    fade 3 $((alarm-60)) 3 gain -n ${vol}
   fi
   play ${tts_dir}/time03.mp3
 fi

@@ -5,8 +5,15 @@
 #                   [filename] [text]
 #                             :
 #                             : 
-# usage:./list2text [list file]
+# usage:./list2text [list file] [save dir]
 # Author:Inoue
+
+# コマンドパーサ
+CMDNAME=`basename $0`
+if [ $# -lt 2 ]; then
+  echo "Usage: ${CMDNAME} [list file] [save dir]" 1>&2
+  exit 1
+fi
 
 cat $1|while read line
 do
