@@ -26,7 +26,7 @@ def main():
                 if word == 'OK':
                     sys.exit()
                     client.close()
-                if re.match(r'スヌーズ\d分', word):
+                if re.match(r'.*\d分', word):
                     minute=re.search(r'\d', word).group()
                     voice='./speech/'+args[1]+'/snooze'+minute+'.wav'
                     os.system('play '+voice)

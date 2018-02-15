@@ -62,8 +62,7 @@ for((i=0;i<${agenda_items};i++)); do
   ./scripts/play_bgm $1 $i a ${tts_dir} ${bgm_vol}
   ./scripts/play_bgm $1 $i b ${tts_dir} ${bgm_vol}
   play ${tts_dir}/summary0${i}.wav
-  read -p "Hit enter to start recording: "
-  python3 ./scripts/rec.py ${rec_dir}/summary0${i}
+  python3 ./scripts/sleep.py 60
   pkill -f julius
   ./scripts/start_julius # julius認識サーバ起動
   play ${tts_dir}/finish01.wav
@@ -72,8 +71,7 @@ for((i=0;i<${agenda_items};i++)); do
 done
 
 play ${tts_dir}/assign01.wav
-read -p "Hit enter to start recording: "
-python3 ./scripts/rec.py ${rec_dir}/todo
+python3 ./scripts/sleep.py 60
 play ${tts_dir}/finish02.wav
 
 pkill -f julius
