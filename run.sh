@@ -4,19 +4,24 @@
 # Author:Inoue
 
 
-set -ex
+set -x
 # コマンドパーサ
 CMDNAME=`basename $0`
 if [ $# -lt 1 ] || \
    [ `echo $1 | grep "\."` ] || \
-   [ ! -e ./json/$1.json ]; then
-  echo "Usage: ${CMDNAME} [agenda name (Not required suffix)]" 1>&2
+   [ ! -e ./json/$1.json ] || \
+   [ ! -d ./speech/$2 ]; then
+  echo "Usage: ${CMDNAME} [agenda name (Not required suffix)] [char name]" 1>&2
+  echo "usage: [char name] = haruka, show, santa, bear"
   exit 1
 fi
 
+
 # 音量設定
-vol=10 # 全体の音量
+vol=20 # 全体の音量
 bgm_vol=-15 # BGMの音量（マイナスの値を推奨）
+char_name=$2
+
 
 # 作業ディレクトリの設定
 json=`cat ./json/$1.json`
@@ -25,48 +30,51 @@ data_dir=./data/$1
 
 
 # julius認識サーバ起動
-./scripts/kill_server
+pkill -f julius
 ./scripts/start_julius
 
 
 # 必要なtts音声ファイルを準備
-tts_dir=${data_dir}/tts
+tts_dir=${data_dir}/tts/${char_name}
 rec_dir=${data_dir}/rec
 mkdir -p ${tts_dir} ${rec_dir}
-cp ./speech/*.mp3 ${tts_dir}
-./scripts/json2list ./json/$1.json ${tts_dir}/list
-./scripts/list2tts ${tts_dir}/list ${tts_dir}
-
+if [ ! `ls ${tts_dir}/*.wav` ]; then
+  ./scripts/json2list ./json/$1.json ${tts_dir}/list
+  ./scripts/list2tts ${tts_dir}/list ${tts_dir} ${char_name}
+fi
+cp ./speech/${char_name}/*.wav ${tts_dir}
 
 # ファイル生成の完了を報告
 ./scripts/set_volume ${vol}
-play ${tts_dir}/system01.mp3
-play ${tts_dir}/system02.mp3
-python3 ./scripts/voice_command.py # 音声コマンド認識
+play ${tts_dir}/system01.wav
+play ${tts_dir}/system02.wav
+python3 ./scripts/voice_command.py ${char_name} # 音声コマンド認識
 
 
 # 会議を進行する。
-play `ls -ld $(find ${tts_dir}) | awk '{print $9}' | \
-	grep start | grep -v start0[1-3]`
+play ${tts_dir}/start*.wav
 
 for((i=0;i<${agenda_items};i++)); do
-  play ${tts_dir}/agenda0$i.mp3
+  if [ ! $i == 0 ]; then
+    play ${tts_dir}/next01.wav
+  fi
+  play ${tts_dir}/agenda0$i.wav
   ./scripts/play_bgm $1 $i a ${tts_dir} ${bgm_vol}
   ./scripts/play_bgm $1 $i b ${tts_dir} ${bgm_vol}
-  play ${tts_dir}/summary0${i}.mp3
+  play ${tts_dir}/summary0${i}.wav
   read -p "Hit enter to start recording: "
   python3 ./scripts/rec.py ${rec_dir}/summary0${i}
-  ./scripts/kill_server
+  pkill -f julius
   ./scripts/start_julius # julius認識サーバ起動
-  play ${tts_dir}/finish01.mp3
-  play ${tts_dir}/stop0${i}.mp3
-  python3 ./scripts/voice_command.py # 音声コマンド認識
+  play ${tts_dir}/finish01.wav
+  play ${tts_dir}/stop0${i}.wav
+  python3 ./scripts/voice_command.py ${char_name} # 音声コマンド認識
 done
 
-play ${tts_dir}/assign01.mp3
+play ${tts_dir}/assign01.wav
 read -p "Hit enter to start recording: "
 python3 ./scripts/rec.py ${rec_dir}/todo
-play ${tts_dir}/finish02.mp3
+play ${tts_dir}/finish02.wav
 
-./scripts/kill_server
+pkill -f julius
 

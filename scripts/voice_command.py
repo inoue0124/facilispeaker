@@ -4,9 +4,11 @@ import os
 import subprocess
 import time
 import sys
+import re
+args=sys.argv
 
-host = '127.0.0.1' #localhost
-port = 10500   #julisuサーバーモードのポート
+host = '127.0.0.1' # localhost
+port = 10500   # juliusサーバーモードのポート
 
 def main():
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -24,6 +26,12 @@ def main():
                 if word == 'OK':
                     sys.exit()
                     client.close()
+                if re.match(r'スヌーズ\d分', word):
+                    minute=re.search(r'\d', word).group()
+                    voice='./speech/'+args[1]+'/snooze'+minute+'.wav'
+                    os.system('play '+voice)
+                    time.sleep(int(minute)*60)
+                    sys.exit()
                 print (word) 
                 data = '' 
 

@@ -1,0 +1,22 @@
+#!/bin/bash
+# HOYAのAPIを使ってttsを保存するスクリプト
+
+set -ex
+# コマンドパーサ
+CMDNAME=`basename $0`
+if [ $# -lt 4 ] || [ `echo $2 | grep "\."` ]; then
+  echo "Usage: ${CMDNAME} [save dir] [char name] [filename (Not required suffix)] [text]" 1>&2
+  exit 1
+fi
+save_dir=$1
+charname=$2
+filename=$3
+shift
+shift
+shift
+text=$*
+
+# api設定
+api_key=qkjd2c3es5s9w30y:
+
+curl "https://api.voicetext.jp/v1/tts" -o ${save_dir}/${filename}.wav -u ${api_key} -d text=${text} -d speaker=${charname} -d speed=135

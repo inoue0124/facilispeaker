@@ -10,12 +10,13 @@
 
 # コマンドパーサ
 CMDNAME=`basename $0`
-if [ $# -lt 2 ]; then
-  echo "Usage: ${CMDNAME} [list file] [save dir]" 1>&2
+if [ $# -lt 3 ]; then
+  echo "Usage: ${CMDNAME} [list file] [save dir] [char name]" 1>&2
   exit 1
 fi
 
 cat $1|while read line
 do
-  save_tts $2 $line
+  #save_tts $2 $line
+  save_hoyatts $2 $3 $line
 done

@@ -1,9 +1,6 @@
 from pynput.keyboard import Key, Listener
 import os
 
-def print_something():
-    print('hi tohu!')
-
 def on_press(key):
     try:
         print('alphanumeric key {0} pressed'.format(key.char))

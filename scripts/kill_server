@@ -3,5 +3,5 @@
 #Author:Inoue
 
 if [[ `ps -A|grep julius` ]]; then # もしjuliusのプロセスがあったら
-  kill `ps -A | grep julius | cut -d " " -f 2`
+  kill `ps -A | grep julius | cut -d " " -f 1`
 fi

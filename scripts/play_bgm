@@ -24,8 +24,8 @@ vol=$5
 json=`cat ./json/${project}.json`
 class=`echo $json|jq -r .agenda[${agenda_num}].class`
 case ${class} in
-  "報告" ) bgm=spirits.mp3 ;;
-  "討議" ) bgm=relax.mp3 ;;
+  "報告" ) bgm=piano.mp3 ;;
+  "討議" ) bgm=cafe.mp3 ;;
   "承認" ) bgm=morning.mp3 ;;
 esac
 
@@ -34,10 +34,10 @@ esac
 time=$((`echo $json|jq -r .agenda[${agenda_num}].time` * 60))
 if [ $time -lt 600 ]; then # 予定時間が10分より短かったら
   alarm=180 # 3分前にお知らせ
-  alarm_tts=time02.mp3
+  alarm_tts=time02.wav
 else # 予定時間が10分より長かったら
   alarm=300 # 5分前にお知らせ
-  alarm_tts=time01.mp3
+  alarm_tts=time01.wav
 fi
 
 
@@ -51,6 +51,7 @@ if [ ${part} == "a" ]; then
     play ./bgm/${bgm} trim $from $((time-alarm)) \
 	    fade 3 $((time-alarm)) 3 gain -n ${vol}
   fi
+  play ./bgm/SE/bell1.mp3
   play ${tts_dir}/${alarm_tts}
 else
   if [ ${class} == "承認" ]; then
@@ -59,5 +60,6 @@ else
     play ./bgm/${bgm} trim $from $((alarm-60)) \
 	    fade 3 $((alarm-60)) 3 gain -n ${vol}
   fi
-  play ${tts_dir}/time03.mp3
+  play ./bgm/SE/bell2.mp3
+  play ${tts_dir}/time03.wav
 fi
