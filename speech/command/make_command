@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for i in {hikari,show,bear,santa}; do
+  list2tts praise_list $i $i
+  list2tts blame_list $i $i
+done

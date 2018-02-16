@@ -12,7 +12,7 @@ if [ $# -lt 1 ] || \
    [ ! -e ./json/$1.json ] || \
    [ ! -d ./speech/$2 ]; then
   echo "Usage: ${CMDNAME} [agenda name (Not required suffix)] [char name]" 1>&2
-  echo "usage: [char name] = haruka, show, santa, bear"
+  echo "usage: [char name] = hikari, show, santa, bear"
   exit 1
 fi
 
