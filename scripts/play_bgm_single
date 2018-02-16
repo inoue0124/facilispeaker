@@ -24,8 +24,8 @@ vol=$5
 json=`cat ./json/${project}.json`
 class=`echo $json|jq -r .agenda[${agenda_num}].class`
 case ${class} in
-  "報告" ) bgm=classic.mp3 ;;
-  "討議" ) bgm=creative.mp3 ;;
+  "報告" ) bgm=tell.mp3 ;;
+  "討議" ) bgm=brest.mp3 ;;
   "承認" ) bgm=morning.mp3 ;;
 esac
 
@@ -43,23 +43,12 @@ fi
 
 # ランダムな開始位置から音楽を再生
 duration=`soxi -D bgm/${bgm}`
-from=$(($RANDOM % $((${duration%.*}-${time})) ))
-if [ ${part} == "a" ] && [ $time -gt 180 ]; then
-  if [ ${class} == "承認" ]; then
-    play ./bgm/${bgm} trim 0 $((time-alarm)) gain -n ${vol}
-  else
-    play ./bgm/${bgm} trim $from $((time-alarm)) \
-	    fade 1 $((time-alarm)) 1 gain -n ${vol}
-  fi
+if [ ${part} == "a" ]; then
+  play ./bgm/${bgm} trim 0 $((time-alarm)) gain -n ${vol}
   play ./bgm/SE/bell1.mp3
   play ${tts_dir}/${alarm_tts}
-elif [ ${part} == "b" ]; then
-  if [ ${class} == "承認" ]; then
-    play ./bgm/${bgm} trim 0 $((alarm-60)) gain -n ${vol}
-  else
-    play ./bgm/${bgm} trim $from $((alarm-60)) \
-	    fade 1 $((alarm-60)) 1 gain -n ${vol}
-  fi
+else
+  play ./bgm/${bgm} trim 0 $((alarm-60)) gain -n ${vol}
   play ./bgm/SE/bell2.mp3
   play ${tts_dir}/time03.wav
 fi

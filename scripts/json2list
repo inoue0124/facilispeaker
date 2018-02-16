@@ -5,8 +5,8 @@
 set -e
 # コマンドパーサ
 CMDNAME=`basename $0`
-if [ $# -lt 2 ]; then
-  echo "Usage: ${CMDNAME} [json file] [save filename]" 1>&2
+if [ $# -lt 3 ]; then
+  echo "Usage: ${CMDNAME} [json file] [save filename] [char name]" 1>&2
   exit 1
 fi
 
@@ -17,16 +17,17 @@ agenda=`cat $1|jq -r .agenda[].title`
 agenda_items=`cat $1|jq .agenda |jq length`
 prework=`cat $1|jq -r .prework`
 
-echo "start01 この会議の参加者は${member}です。"|tr -d "\n" > $2
+echo "intro ここからファシリテートを勤めさせていただきます、$3、と申します。" > $2
+echo "start01 この会議の参加者は${member}です。"|tr -d "\n" >> $2
 echo "" >> $2
 echo "start02 この会議の目的は${aim}です。" >> $2
-echo "start03 アジェンダは" >> $2
+echo "agenda01 アジェンダは" >> $2
 
 for((i=0;i<${agenda_items};i++)); do
   if [ $((i+1)) = ${agenda_items} ]; then
-    echo "start0$((i+4)) `echo $agenda|cut -d " " -f $((i+1))`です。" >> $2
+    echo "agenda0$((i+2)) `echo $agenda|cut -d " " -f $((i+1))`、です。" >> $2
   else
-    echo "start0$((i+4)) `echo $agenda|cut -d " " -f $((i+1))`" >> $2
+    echo "agenda0$((i+2)) `echo $agenda|cut -d " " -f $((i+1))`" >> $2
   fi
 done
 
@@ -37,10 +38,10 @@ for((i=0;i<${agenda_items};i++)); do
   fi
   title=`cat $1|jq -r .agenda[$i].title`
   class=`cat $1|jq -r .agenda[$i].class`
-  echo "agenda0$i ${speaker}さん。「${title}」の${class}をお願いします。" >> $2
+  echo "assign0$i それでは${speaker}さん。「${title}」の${class}をお願いします。" >> $2
   echo "summary0$i ${speaker}さん。結論をまとめてください。" >> $2
   echo "stop0$i ${class}が終わりましたら「OK」と言ってください。" >> $2
 done
 
 member=`cat $1|jq -r .member[$(($RANDOM % $member_number))]`
-echo "assign01 最後に${member}さん、次回までのトゥードゥーをまとめてください。" >> $2
+echo "todo01 最後に${member}さん、次回までのトゥードゥーをまとめてください。" >> $2
