@@ -1,0 +1,30 @@
+#!/bin/bash
+# HOYAのAPIを使ってttsを再生するスクリプト
+
+
+# コマンドパーサ
+CMDNAME=`basename $0`
+if [ $# -lt 4 ]; then
+  echo "Usage: ${CMDNAME} [char name] [speed] [emotion] [text]" 1>&2
+  exit 1
+fi
+charname=$1
+speed=$2
+emotion=$3
+shift
+shift
+shift
+text=$*
+
+# api設定
+api_key=qkjd2c3es5s9w30y:
+tmpwav=$(mktemp  --suffix=.wav)
+
+if [ $emotion = normal ]; then
+  curl "https://api.voicetext.jp/v1/tts" -o ${tmpwav} -u ${api_key} -d text=${text} -d speaker=${charname} -d speed=${speed}
+else
+  curl "https://api.voicetext.jp/v1/tts" -o ${tmpwav} -u ${api_key} -d text=${text} -d speaker=${charname} -d speed=${speed} -d emotion=${emotion}
+fi
+
+play ${tmpwav}
+rm ${tmpwav}
