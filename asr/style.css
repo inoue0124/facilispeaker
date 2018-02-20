@@ -1,0 +1,71 @@
+@charset "Shift_JIS";
+
+/* --- 全体の背景・テキスト --- */
+body {
+margin: 0;
+padding: 0;
+background-color: #f0f8ff; /* ページの背景色 */
+color: #000000; /* 全体の文字色 */
+font-size: 100%; /* 全体の文字サイズ */
+font-family: "YuGothic","Yu Gothic","Meiryo","ヒラギノ角ゴ","sans-serif";
+}
+
+/* --- 全体のリンクテキスト --- */
+a:link { color: #0000ff; }
+a:visited { color: #800080; }
+a:hover { color: #ff0000; }
+a:active { color: #ff0000; }
+
+/* --- コンテナ --- */
+#container {
+width: 780px; /* ページの幅 */
+margin: 0 auto; /* センタリング */
+}
+
+/* --- ヘッダ --- */
+#header {
+background-color: black;
+color: white;
+padding: 10px
+}
+
+/* --- コンテンツ --- */
+.note{
+    padding: 0.5em 1em;
+    margin: 2em 0;
+    color: #5d627b;
+    background: white;
+    border-top: solid 5px #5d627b;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.22);
+}
+.note p {
+    margin: 0; 
+    padding: 0;
+}
+
+
+/* --- フッタ --- */
+#footer {
+background-color: #00ada9; /* フッタの背景色 */
+text-align:center;
+}
+
+.raised{
+  display: inline-block;
+  background-color: #26a69b;/*背景色*/
+  color: #FFF;/*文字色*/
+  font-size: 1em;/*文字サイズ*/
+  line-height: 1;
+  text-decoration: none;
+  letter-spacing: 0.05em;/*字間*/
+  padding: 0.2em 1em;/*ボタン内の余白*/
+  border-radius: 3px;/*角の丸み*/
+    cursor: pointer;
+  box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 3px 1px -2px rgba(0,0,0,0.2);/*影*/
+  -webkit-tap-highlight-color: transparent;
+  transition: .3s ease-out;/*変化を緩やかに*/
+}
+
+.raised:hover{
+    box-shadow: 0 3px 3px 0 rgba(0,0,0,0.14), 0 1px 7px 0 rgba(0,0,0,0.12), 0 3px 1px -1px rgba(0,0,0,0.2);/*浮き上がるように*/
+}

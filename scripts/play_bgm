@@ -25,7 +25,7 @@ json=`cat ./json/${project}.json`
 class=`echo $json|jq -r .agenda[${agenda_num}].class`
 case ${class} in
   "報告" ) bgm=classic.mp3 ;;
-  "討議" ) bgm=creative.mp3 ;;
+  "討議" ) bgm=relax.mp3 ;;
   "承認" ) bgm=morning.mp3 ;;
 esac
 
